@@ -1,0 +1,20 @@
+h8 <- 7
+k8 <- 0.4
+delta <- 0.7
+# In-control ARL (delta=0)
+b <- h8 + 1.166
+ARL0 <- (exp(-2*(-k8)*b) - 1 + 2*(-k8)*b) / (2*(-k8)^2)
+# Out-of-control ARL (delta=0.7)
+delta_plus <- delta - k8
+delta_minus <- -delta - k8
+ARL1_plus <- (exp(-2*delta_plus*b) - 1 + 2*delta_plus*b) / (2*delta_plus^2)
+ARL1_minus <- ifelse(delta_minus < 0,
+(exp(-2*delta_minus*b) - 1 + 2*delta_minus*b) / (2*delta_minus^2),
+Inf)
+ARL1 <- 1 / (1/ARL1_plus + 1/ARL1_minus)
+beta <- (ARL1 - 1) / ARL1
+detect_prob <- 1 - beta
+cat("Problem 8 Results:\n")
+cat(sprintf("In-control ARL: %.1f\n", ARL0))
+cat(sprintf("Out-of-control ARL: %.1f\n", ARL1))
+cat(sprintf("Probability of detecting shift: %.3f\n\n", detect_prob))
