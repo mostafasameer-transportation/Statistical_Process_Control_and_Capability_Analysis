@@ -1,0 +1,11 @@
+n6 <- 25
+xbar6 <- 85
+s6 <- 10
+k <- 1.838 # Tolerance factor for 95% confidence, 90% coverage
+# (i) Upper tolerance limit
+UTL <- xbar6 + k * s6
+# (ii) Lower tolerance limit
+LTL <- xbar6 - k * s6
+cat("Problem 6 Results:\n")
+cat(sprintf("(i) 95%% of measurements below: %.2f\n", UTL))
+cat(sprintf("(ii) 95%% of measurements above: %.2f\n\n", LTL))
