@@ -1,0 +1,24 @@
+n1 <- 5
+xbar1 <- 0.00109
+Rbar <- 0.00635
+USL1 <- 0.01
+LSL1 <- -0.01
+target1 <- 0
+# Estimate sigma
+d2 <- 2.326 # for n=5
+sigma_hat <- Rbar / d2
+# Capability indices
+Cp <- (USL1 - LSL1) / (6 * sigma_hat)
+Cpu <- (USL1 - xbar1) / (3 * sigma_hat)
+Cpl <- (xbar1 - LSL1) / (3 * sigma_hat)
+Cpk <- min(Cpu, Cpl)
+V <- (target1 - xbar1) / sigma_hat
+Cpm <- Cp / sqrt(1 + V^2)
+xi <- (xbar1 - target1) / sigma_hat
+Cpkm <- Cpk / sqrt(1 + xi^2)
+# Interpretation
+cat("Problem 1 Results:\n")
+cat(sprintf("Cp = %.3f (Uses %.0f%% of spec band)\n", Cp, 100/Cp))
+cat(sprintf("Cpk = %.3f (Process is %s)\n", Cpk, ifelse(Cpk > 1, "capable", "not capable")))
+cat(sprintf("Cpm = %.3f (Mean is %s)\n", Cpm, ifelse(Cpm > 1, "in middle third", "off-center")))
+cat(sprintf("Cpkm = %.3f (Process is marginally capable)\n\n", Cpkm))
