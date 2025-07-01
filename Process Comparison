@@ -1,0 +1,20 @@
+# Process A
+xbarA <- 100
+sbarA <- 3
+sigmaA <- sbarA / c4
+CpA <- (112 - 88) / (6 * sigmaA)
+CpkA <- min((112 - xbarA)/(3*sigmaA), (xbarA - 88)/(3*sigmaA))
+falloutA <- pnorm(88, xbarA, sigmaA) + (1 - pnorm(112, xbarA, sigmaA))
+# Process B
+xbarB <- 105
+sbarB <- 1
+sigmaB <- sbarB / c4
+CpB <- (112 - 88) / (6 * sigmaB)
+CpkB <- min((112 - xbarB)/(3*sigmaB), (xbarB - 88)/(3*sigmaB))
+falloutB <- pnorm(88, xbarB, sigmaB) + (1 - pnorm(112, xbarB, sigmaB))
+cat("Problem 4 Results:\n")
+cat("Process A:\n")
+cat(sprintf(" Cp = %.3f, Cpk = %.3f, Fallout = %.6f\n", CpA, CpkA, falloutA))
+cat("Process B:\n")
+cat(sprintf(" Cp = %.3f, Cpk = %.3f, Fallout = %.6f\n", CpB, CpkB, falloutB))
+cat("Conclusion: Process B is preferred due to lower fallout\n\n")
