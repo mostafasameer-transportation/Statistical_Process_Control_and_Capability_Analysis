@@ -1,0 +1,24 @@
+xbar3 <- 75
+sbar3 <- 2
+n3 <- 5
+USL3 <- 90
+LSL3 <- 70
+target3 <- 80
+# Estimate sigma
+c4 <- 0.9400
+sigma_hat3 <- sbar3 / c4
+# Part (a): Potential capability
+Cp3 <- (USL3 - LSL3) / (6 * sigma_hat3)
+# Part (b): Actual capability
+Cpk3 <- min((USL3 - xbar3)/(3*sigma_hat3), (xbar3 - LSL3)/(3*sigma_hat3))
+# Part (c): Reduction in fallout
+fallout_original <- pnorm(LSL3, xbar3, sigma_hat3) +
+(1 - pnorm(USL3, xbar3, sigma_hat3))
+fallout_nominal <- pnorm(LSL3, target3, sigma_hat3) +
+(1 - pnorm(USL3, target3, sigma_hat3))
+reduction <- fallout_original - fallout_nominal
+cat("Problem 3 Results:\n")
+cat(sprintf("(a) Cp = %.3f\n", Cp3))
+cat(sprintf("(b) Cpk = %.3f\n", Cpk3))
+cat(sprintf("(c) Fallout reduction: %.4f (%.1f%% reduction)\n\n",
+reduction, 100*reduction/fallout_original))
