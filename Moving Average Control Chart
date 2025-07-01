@@ -1,0 +1,24 @@
+w <- 3
+ma <- function(data, w) {
+n <- length(data)
+ma_vals <- rep(NA, n)
+for (i in w:n) {
+ma_vals[i] <- mean(data[(i-w+1):i])
+}
+return(ma_vals)
+}
+ma_vals <- ma(wait_times, w)
+sigma_ma <- sigma_wait / sqrt(w)
+ucl_ma <- mu_wait + 3 * sigma_ma
+lcl_ma <- mu_wait - 3 * sigma_ma
+# Plot
+plot(ma_vals, type = "l", ylim = c(0, max(ma_vals, na.rm = TRUE) * 1.1),
+main = "Moving Average Control Chart (w=3)", ylab = "Moving Average")
+abline(h = mu_wait, col = "blue")
+abline(h = ucl_ma, col = "red")
+abline(h = lcl_ma, col = "red")
+# Check control
+in_control <- all(ma_vals >= lcl_ma & ma_vals <= ucl_ma, na.rm = TRUE)
+cat("Problem 10: See plot for Moving Average chart\n")
+cat(sprintf("Process is %s control\n", ifelse(in_control, "in", "out of")))
+cat("Comparison with EWMA: MA chart is less sensitive to small shifts\n")
