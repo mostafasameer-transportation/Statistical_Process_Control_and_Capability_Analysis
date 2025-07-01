@@ -1,0 +1,30 @@
+data7 <- c(8, 8.01, 8.02, 8.01, 8.06, 8.07, 8.01, 8.04, 8.02, 8.01,
+8.05, 8.04, 8.03, 8.05, 8.06, 8.04, 8.05, 8.06, 8.04, 8.02, 8.03, 8.05)
+target7 <- 8.02
+sigma7 <- 0.05
+k7 <- 0.5
+h7 <- 4.77
+H <- h7 * sigma7
+K <- k7 * sigma7
+# Initialize CUSUM
+Cplus <- numeric(length(data7))
+Cminus <- numeric(length(data7))
+for (i in 1:length(data7)) {
+if (i == 1) {
+Cplus[i] <- max(0, data7[i] - (target7 + K))
+Cminus[i] <- max(0, (target7 - K) - data7[i])
+} else {
+Cplus[i] <- max(0, data7[i] - (target7 + K) + Cplus[i-1])
+Cminus[i] <- max(0, (target7 - K) - data7[i] + Cminus[i-1])
+}
+}
+# Check for out-of-control
+out_of_control <- sum(Cplus > H | Cminus > H)
+# Part (b): Estimate sigma from moving range
+MR <- abs(diff(data7))
+MRbar <- mean(MR)
+sigma_hat7 <- MRbar / 1.128
+cat("Problem 7 Results:\n")
+cat(sprintf("(a) Number of out-of-control points: %d\n", out_of_control))
+cat(sprintf("(b) Estimated sigma = %.4f (given sigma = 0.05 is %s)\n\n",
+sigma_hat7, ifelse(abs(sigma_hat7 - 0.05) > 0.01, "unreasonable", "reasonable")))
