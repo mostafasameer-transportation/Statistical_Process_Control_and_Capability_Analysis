@@ -1,0 +1,34 @@
+USL2 <- 100
+LSL2 <- 90
+n2 <- 30
+xbar2 <- 97
+s2 <- 1.6
+# Part (a): Cp point estimate and 95% CI
+Cp_hat <- (USL2 - LSL2) / (6 * s2)
+chi_low <- qchisq(0.025, n2-1)
+chi_high <- qchisq(0.975, n2-1)
+CI_Cp_low <- Cp_hat * sqrt(chi_low/(n2-1))
+CI_Cp_high <- Cp_hat * sqrt(chi_high/(n2-1))
+# Part (c): Test H0: Cp <= 1.33 vs Ha: Cp > 1.33
+Cp0 <- 1.33
+test_stat <- (n2-1) * (Cp0/Cp_hat)^2
+critical_val <- qchisq(0.95, n2-1)
+reject_H0 <- test_stat > critical_val
+# Part (d): Cpk point estimate and 99% CI
+Cpk_hat <- min((USL2 - xbar2)/(3*s2), (xbar2 - LSL2)/(3*s2))
+z_alpha <- qnorm(0.995)
+Cpk_se <- sqrt(1/(9*n2*Cpk_hat^2) + 1/(2*(n2-1)))
+CI_Cpk_low <- Cpk_hat * (1 - z_alpha * Cpk_se)
+CI_Cpk_high <- Cpk_hat * (1 + z_alpha * Cpk_se)
+# Part (e): Approximate CI for Cpk
+approx_se <- sqrt(1/(2*(n2-1)))
+CI_approx_low <- Cpk_hat * (1 - z_alpha * approx_se)
+CI_approx_high <- Cpk_hat * (1 + z_alpha * approx_se)
+cat("Problem 2 Results:\n")
+cat(sprintf("(a) Cp = %.3f, 95%% CI = [%.3f, %.3f]\n", Cp_hat, CI_Cp_low, CI_Cp_high))
+cat(sprintf("(c) Test Cp > 1.33: %s (test stat=%.2f, critical=%.2f)\n",
+ifelse(reject_H0, "Reject H0", "Fail to reject H0"), test_stat, critical_val))
+cat(sprintf("(d) Cpk = %.3f, 99%% CI = [%.3f, %.3f]\n", Cpk_hat, CI_Cpk_low, CI_Cpk_high))
+cat(sprintf("(e) Approx CI = [%.3f, %.3f], Width Ratio = %.2f\n\n",
+CI_approx_low, CI_approx_high,
+(CI_approx_high - CI_approx_low)/(CI_Cpk_high - CI_Cpk_low)))
