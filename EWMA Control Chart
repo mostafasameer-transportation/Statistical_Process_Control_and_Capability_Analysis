@@ -1,0 +1,50 @@
+wait_times <- c(2.49, 3.39, 7.41, 2.88, 0.76, 1.32, 7.05, 1.37, 6.17, 5.12,
+1.34, 0.50, 4.35, 1.67, 1.63, 4.88, 15.19, 0.67, 4.14, 2.16,
+1.14, 2.66, 4.67, 1.54, 5.06, 3.40, 1.38, 1.11, 6.92, 36.99)
+lambda1 <- 0.2
+lambda2 <- 0.8
+L9 <- 2.5
+# Estimate parameters
+MR_wait <- abs(diff(wait_times))
+MRbar_wait <- mean(MR_wait)
+sigma_wait <- MRbar_wait / 1.128
+mu_wait <- mean(wait_times)
+# EWMA function
+ewma <- function(data, lambda) {
+z <- numeric(length(data))
+z[1] <- data[1]
+for (i in 2:length(data)) {
+z[i] <- lambda * data[i] + (1 - lambda) * z[i-1]
+}
+return(z)
+}
+# Control limits function
+ewma_limits <- function(lambda, L, sigma, n, mu) {
+lcl <- numeric(n)
+ucl <- numeric(n)
+for (i in 1:n) {
+factor <- L * sigma * sqrt((lambda/(2 - lambda)) * (1 - (1 - lambda)^(2*i)))
+lcl[i] <- mu - factor
+ucl[i] <- mu + factor
+}
+return(list(lcl = lcl, ucl = ucl))
+}
+# Calculate EWMA and limits
+ewma1 <- ewma(wait_times, lambda1)
+ewma2 <- ewma(wait_times, lambda2)
+limits1 <- ewma_limits(lambda1, L9, sigma_wait, length(wait_times), mu_wait)
+limits2 <- ewma_limits(lambda2, L9, sigma_wait, length(wait_times), mu_wait)
+# Plot results
+par(mfrow = c(2, 1))
+plot(ewma1, type = "l", ylim = range(c(ewma1, limits1$lcl, limits1$ucl)),
+main = "EWMA Control Chart (λ=0.2)", ylab = "EWMA")
+lines(limits1$lcl, col = "red")
+lines(limits1$ucl, col = "red")
+abline(h = mu_wait, col = "blue")
+plot(ewma2, type = "l", ylim = range(c(ewma2, limits2$lcl, limits2$ucl)),
+main = "EWMA Control Chart (λ=0.8)", ylab = "EWMA")
+lines(limits2$lcl, col = "red")
+lines(limits2$ucl, col = "red")
+abline(h = mu_wait, col = "blue")
+cat("Problem 9: See plots for EWMA control charts\n")
+cat("Effect of λ: Larger λ widens control limits, smaller λ tightens limits\n\n")
