@@ -1,0 +1,6 @@
+alpha <- 0.01
+gamma <- 0.95
+chi_val <- qchisq(1 - alpha, 4)
+n5 <- 0.5 + ((2 - alpha)/alpha) * (chi_val/4)
+cat("Problem 5 Result:\n")
+cat(sprintf("Required sample size: %d\n\n", ceiling(n5)))
